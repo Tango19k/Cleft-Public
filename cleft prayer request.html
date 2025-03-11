@@ -1,0 +1,215 @@
+<html>
+ <head>
+  <title>Prayer Request</title>
+  <link href="styledashboard.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+ </head>
+ 
+ 
+ 
+  <body>
+  
+  <!-- Hamburger Button -->
+    <div class="hamburger-menu" id="hamburger-menu">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+    </div>
+
+    <!-- Navigation Menu -->
+    <nav class="nav-menu" id="nav-menu">
+        <ul>
+            <li><a href="https://aenfnk.mimo.run/dashboard.html">Home</a></li>
+            <li><a href="https://aenfnk.mimo.run/about.html">About</a></li>
+            
+            <li><a href="https://aenfnk.mimo.run/books.html">Books</a></li>
+            <li><a href="https://aenfnk.mimo.run/audio.html">Audio</a></li>
+            <li><a href="https://therocknewark.org">RCF</a></li>
+            <li><a href="https://aenfnk.mimo.run/prayer.html">Prayer Request</a></li>
+            <li><a href="https://aenfnk.mimo.run/resources.html">Resources</a></li>
+          <li><a           href="https://aenfnk.mimo.run/RSM.html">Rock Solid Men</a></li>
+            <br>
+            <br>
+            <br>
+            <button id="logoutButton">Logout</button>
+        </ul>
+    </nav>
+  
+  <div style="text-align: left;">
+  <a href="https://aenfnk.mimo.run/dashboard.html">
+    <img src="https://github.com/Tango19k/Cleft-Public/raw/main/IMG_0653.jpeg" alt="Cleft Logo" width="100" height="100">
+   </a>
+  </div>
+  
+  
+  <script>
+    
+    document.addEventListener("DOMContentLoaded", function() {
+    const hamburgerMenu = document.getElementById("hamburger-menu");
+    const navMenu = document.getElementById("nav-menu");
+
+    hamburgerMenu.addEventListener("click", function() {
+        navMenu.classList.toggle("active");
+    });
+});
+
+// Handle logout
+        document.getElementById('logoutButton').addEventListener('click', function() {
+            // Clear the session storage
+            sessionStorage.removeItem('loggedIn');
+            // Redirect to login page
+            window.location.href = 'index.html';
+        });
+    </script>
+    
+<style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 10;
+            background-color: white;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        input, textarea {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        
+        }
+
+        .feedbacks {
+            margin-top: 20px;
+        }
+
+        .feedback {
+            background-color: #fff;
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+        }
+
+        .feedback h3 {
+            margin: 0 0 10px;
+        }
+
+        .feedback p {
+            margin: 0 0 10px;
+        }
+
+        .like-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Prayer Request</h1>
+    
+    <p>Prayers can also be requested anonymously. Just type "Anonymous" where your name should be.</p>
+    
+    <!-- Feedback Form -->
+    <form id="feedbackForm">
+        <input type="text" id="username" placeholder="Your Name" required>
+        <textarea id="feedback" placeholder="Your Prayer Request" required></textarea>
+        <button type="submit">Submit Prayer Request</button>
+    </form>
+
+    <!-- Display Feedback -->
+    <div class="feedbacks" id="feedbackList"></div>
+
+    <script>
+document.addEventListener('DOMContentLoaded', loadFeedbacks);
+
+document.getElementById('feedbackForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent form from submitting the traditional way
+    
+    const username = document.getElementById('username').value;
+    const feedback = document.getElementById('feedback').value;
+    const date = new Date().toLocaleString(); // Get the current date and time
+
+    // Add feedback and clear the form
+    addFeedback(username, feedback, date);
+
+    document.getElementById('username').value = '';
+    document.getElementById('feedback').value = '';
+});
+
+function addFeedback(username, feedback, date, likes = 0, index = null) {
+    const feedbackDiv = document.createElement('div');
+    feedbackDiv.className = 'feedback';
+
+    // If index is null, this is a new feedback, so we need to save it to localStorage
+    if (index === null) {
+        index = saveFeedbackToLocalStorage(username, feedback, date, likes);
+    }
+
+    feedbackDiv.innerHTML = `
+        <h3> says:</h3>
+        <p></p>
+        <small></small>
+        <button class="like-btn" data-index="">Like ()</button>
+    `;
+
+    document.getElementById('feedbackList').insertBefore(feedbackDiv, document.getElementById('feedbackList').firstChild);
+
+    feedbackDiv.querySelector('.like-btn').addEventListener('click', function() {
+        updateLikes(this);
+    });
+}
+
+function updateLikes(button) {
+    const index = button.getAttribute('data-index');
+    let feedbacks = JSON.parse(localStorage.getItem('feedbacks')) || [];
+
+    feedbacks[index].likes++;
+    localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
+
+    // Update the button text without duplicating the entry
+    button.textContent = `Like ()`;
+}
+
+function saveFeedbackToLocalStorage(username, feedback, date, likes) {
+    let feedbacks = JSON.parse(localStorage.getItem('feedbacks')) || [];
+    const feedbackIndex = feedbacks.length;
+
+    feedbacks.push({ username, feedback, date, likes });
+    localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
+
+    return feedbackIndex;
+}
+
+function loadFeedbacks() {
+    let feedbacks = JSON.parse(localStorage.getItem('feedbacks')) || [];
+
+    // Sort feedbacks by date (newest first)
+    feedbacks.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    feedbacks.forEach((feedback, index) => {
+        addFeedback(feedback.username, feedback.feedback, feedback.date, feedback.likes, index);
+    });
+}
+    </script>
+
+</body>
+</html>

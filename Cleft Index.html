@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RCF's The Cleft</title>
+    
+    <div style="text-align: center;">
+    <img src="https://github.com/Tango19k/Cleft-Public/raw/main/IMG_0653.jpeg" alt="Cleft Logo" width="250" height="250">
+   </div>
+    
+    
+    <style>
+        h2 { text-align: center; }
+        body { font-family: Arial, sans-serif; }
+        .container { max-width: 300px; margin: auto; padding-top: 100px; }
+        input { width: 100%; padding: 10px; margin: 5px 0; }
+        button { width: 107%; padding: 10px; background-color: black; color: white; border: none; cursor: pointer; text-align: center; }
+        button:hover { background-color: #218838; }
+        p { text-alignment: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Welcome, brother.</h2>
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="Enter username" required>
+            <input type="password" id="password" placeholder="Enter password" required>
+            <button type="submit">Login</button>
+        </form>
+        <p id="error" style="color: red;"></p>
+    </div>
+
+    <script>
+        // Sample user credentials
+        const user = {
+            username: "Cleftrock",
+            password: "brotherskeeper"
+        };
+
+        // Handle form submission
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Get entered username and password
+            const enteredUsername = document.getElementById('username').value;
+            const enteredPassword = document.getElementById('password').value;
+
+            // Check if the credentials match
+            if (enteredUsername === user.username && enteredPassword === user.password) {
+                // Store login state in sessionStorage
+                sessionStorage.setItem('loggedIn', true);
+                // Redirect to the dashboard page
+                window.location.href = 'dashboard.html';
+            } else {
+                // Display an error message
+                document.getElementById('error').textContent = 'Invalid username or password';
+            }
+        });
+                
+        
+        
+    </script>
+
+        
+</body>
+</html>
